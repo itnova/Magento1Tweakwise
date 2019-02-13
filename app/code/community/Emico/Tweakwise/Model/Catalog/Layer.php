@@ -39,6 +39,16 @@ class Emico_Tweakwise_Model_Catalog_Layer
     protected $_templateId;
 
     /**
+     * @var array
+     */
+    protected $_selectedFacets;
+
+    /**
+     * @var array
+     */
+    protected $_selectedAttributes;
+
+    /**
      * @return Mage_Catalog_Model_Product[]|Mage_Catalog_Model_Resource_Product_Collection
      */
     public function getProducts()
@@ -407,15 +417,19 @@ class Emico_Tweakwise_Model_Catalog_Layer
      */
     public function getSelectedAttributes()
     {
-        $selectedAttributes = [];
-        foreach ($this->getFacets() as $facet) {
-            foreach ($facet->getAttributes() as $attribute) {
-                if ($attribute->getIsSelected()) {
-                    $selectedAttributes[] = $attribute;
+        if (!$this->_selectedAttributes) {
+            $selectedAttributes = [];
+            foreach ($this->getFacets() as $facet) {
+                foreach ($facet->getAttributes() as $attribute) {
+                    if ($attribute->getIsSelected()) {
+                        $selectedAttributes[] = $attribute;
+                    }
                 }
             }
+            $this->_selectedAttributes = $selectedAttributes;
         }
-        return $selectedAttributes;
+        
+        return $this->_selectedAttributes;
     }
 
     /**
@@ -423,15 +437,20 @@ class Emico_Tweakwise_Model_Catalog_Layer
      */
     public function getSelectedFacets()
     {
-        $selectedFacets = [];
-        foreach ($this->getFacets() as $facet) {
-            foreach ($facet->getAttributes() as $attribute) {
-                if ($attribute->getIsSelected()) {
-                    $selectedFacets[] = $facet;
+        if (!$this->_selectedFacets) {
+            $selectedFacets = [];
+            foreach ($this->getFacets() as $facet) {
+                foreach ($facet->getAttributes() as $attribute) {
+                    if ($attribute->getIsSelected()) {
+                        $selectedFacets[] = $facet;
+                    }
                 }
             }
+
+            $this->_selectedFacets = $selectedFacets;
         }
-        return $selectedFacets;
+
+        return $this->_selectedFacets;
     }
 
     /**

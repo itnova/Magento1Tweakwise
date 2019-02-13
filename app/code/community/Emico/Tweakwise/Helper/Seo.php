@@ -8,6 +8,8 @@
  */
 class Emico_Tweakwise_Helper_Seo extends Mage_Core_Helper_Abstract
 {
+
+
     /**
      * Check if we need to apply a noindex nofollow
      *
@@ -59,12 +61,13 @@ class Emico_Tweakwise_Helper_Seo extends Mage_Core_Helper_Abstract
      */
     protected function isInFacetBlacklist(Emico_Tweakwise_Model_Bus_Type_Facet $facetLinkedTo = null)
     {
-        $layer = Mage::getSingleton('emico_tweakwise/catalog_layer');
-        $noFollowFacets = explode(',', Mage::getStoreConfig('emico_tweakwise/navigation/nofollow_facets'));
-        $selectedFacets = $layer->getSelectedFacets();
-        if ($facetLinkedTo !== null) {
-            $selectedFacets[] = $facetLinkedTo;
+        $noFollowFacets = array_filter(explode(',', Mage::getStoreConfig('emico_tweakwise/navigation/nofollow_facets')));
+        if ($facetLinkedTo !== null && in_array($facetLinkedTo->getFacetSettings()->getUrlKey(), $noFollowFacets)) {
+            return true;
         }
+
+        $layer = Mage::getSingleton('emico_tweakwise/catalog_layer');
+        $selectedFacets = $layer->getSelectedFacets();
 
         foreach ($selectedFacets as $facet) {
             if (in_array($facet->getFacetSettings()->getUrlKey(), $noFollowFacets)) {
